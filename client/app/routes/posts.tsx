@@ -1,7 +1,7 @@
-import posts from "~/api/posts";
 import PostCreate from "~/features/posts/PostCreate";
 import PostList from "~/features/posts/PostList";
 import type { Route } from "./+types/posts";
+import { posts, query } from "~/api";
 
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
@@ -35,7 +35,7 @@ export function HydrateFallback() {
 }
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const res = await posts.get("/posts");
+  const res = await query.get("/posts");
   return res.data;
 }
 

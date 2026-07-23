@@ -5,6 +5,10 @@ interface Post {
   id: string;
   title: string;
   content: string;
+  comments?: {
+    id: string;
+    content: string;
+  }[];
 }
 
 interface DynamicDictionary {
@@ -36,7 +40,7 @@ export default function PostList({ posts }: Props) {
               console.log(`Comment created for post_id: ${post_id}`);
             }}
           />
-          <CommentList post_id={post.id} />
+          <CommentList comments={post.comments || []} />
         </div>
       ))}
     </div>
