@@ -6,27 +6,40 @@ const app = express();
 app.use(express.json());
 app.use(makeCors());
 
-const posts = {
-  1: [{ id: 1, content: "This is a comment on the first post." }],
-};
+const posts = {};
 
-app.get("/posts/:id/comments", (req, res) => {
-  const { id } = req.params;
-  const postComments = posts[id] || [];
+app.get("/posts/:postId/comments", (req, res) => {
+  const { postId } = req.params;
+  const postComments = posts[postId] || [];
   res.send(postComments);
 });
 
-app.post("/posts/:id/comments", (req, res) => {
-  const { id } = req.params;
+app.post("/posts/:postId/comments", (req, res) => {
+  const { postId } = req.params;
 
-  const commentId = crypto.randomBytes(4).toString("hex");
+  const id = crypto.randomBytes(4).toString("hex");
   const { content } = req.body;
 
-  const newComment = { id: commentId, content };
-  posts[id] = posts[id] || [];
-  posts[id].push(newComment);
+  const newComment = { id, content, postId };
+  posts[postId] = posts[postId] || [];
+  posts[postId].push(newComment);
+
+  axios
+    .post("http://localhost:3003/events", {
+      type: "CommentCreated",
+      data: newComment,
+    })
+    .catch((err) => {
+      console.log("Error sending event to event bus:", err.message);
+    });
 
   res.status(201).send(newComment);
+});
+
+app.post("/events", (req, res) => {
+  console.log("Received Event:", req.body.type);
+
+  res.send({ status: "OK" });
 });
 
 app.listen(3001, () => {
