@@ -1,6 +1,7 @@
 import posts from "~/api/posts";
 import PostCreate from "~/features/posts/PostCreate";
 import PostList from "~/features/posts/PostList";
+import type { Route } from "./+types/posts";
 
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
@@ -14,25 +15,45 @@ export async function action({ request }: { request: Request }) {
   }
 
   try {
-    await posts.post("/posts", { title });
+    await posts.post("/posts", { title, content });
+
+    return { title, content };
   } catch (error: Error | any) {
-    console.log("Error creating post:", error);
+    const message =
+      error.response?.data?.error ||
+      error.message ||
+      "An unknown error occurred";
+
     return {
-      error:
-        error instanceof Error ? error.message : "An unknown error occurred",
+      error: message,
     };
   }
-
-  return { title, content };
 }
 
-export default function Posts({ actionData }: { actionData: any }) {
+export function HydrateFallback() {
+  return <div>Loading...</div>;
+}
+
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  const res = await posts.get("/posts");
+  return res.data;
+}
+
+export default function Posts({
+  actionData,
+  loaderData,
+}: {
+  actionData: any;
+  loaderData: any;
+}) {
   actionData && console.log("Action Data:", actionData);
+  const postsData = loaderData || [];
+
   return (
-    <div>
+    <div className="flex flex-col gap-4 max-w-2xl mx-auto p-4">
       <h1>Posts</h1>
       <PostCreate actionData={actionData} />
-      <PostList />
+      <PostList posts={postsData} />
     </div>
   );
 }
