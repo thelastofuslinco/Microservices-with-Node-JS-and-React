@@ -27,6 +27,7 @@ app.post("/events", (req, res) => {
         const comment = post.comments.find((c) => c.id === data.id);
         if (comment) {
           comment.status = data.status;
+          comment.content = data.content;
         }
       }
       break;
