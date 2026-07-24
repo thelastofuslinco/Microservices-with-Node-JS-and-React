@@ -9,6 +9,9 @@ app.use(makeCors());
 
 const posts = {};
 
+const event_bus_url =
+  process.env.EVENT_BUS_URL || "http://localhost:3003/events";
+
 app.get("/posts/:postId/comments", (req, res) => {
   const { postId } = req.params;
   const postComments = posts[postId] || [];
@@ -21,12 +24,12 @@ app.post("/posts/:postId/comments", (req, res) => {
   const id = crypto.randomBytes(4).toString("hex");
   const { content } = req.body;
 
-  const newComment = { id, content, postId };
+  const newComment = { id, content, postId, status: "pending" };
   posts[postId] = posts[postId] || [];
   posts[postId].push(newComment);
 
   axios
-    .post("http://localhost:3003/events", {
+    .post(event_bus_url, {
       type: "CommentCreated",
       data: newComment,
     })
@@ -38,9 +41,38 @@ app.post("/posts/:postId/comments", (req, res) => {
 });
 
 app.post("/events", (req, res) => {
-  console.log("Received Event:", req.body.type);
+  const { type, data } = req.body;
 
-  res.send({ status: "OK" });
+  switch (type) {
+    case "CommentModerated":
+      const { id, postId, content, status } = data;
+
+      const comment = posts[postId].find((c) => c.id === id);
+
+      if (comment) {
+        comment.status = status;
+      }
+
+      axios
+        .post(event_bus_url, {
+          type: "CommentUpdated",
+          data: {
+            id: id,
+            content: content,
+            postId: postId,
+            status: status,
+          },
+        })
+        .catch((err) => {
+          console.log("Error sending event to event bus:", err.message);
+        });
+
+      break;
+    default:
+      break;
+  }
+
+  res.status(200).json({ message: "Content is acceptable." });
 });
 
 app.listen(3001, () => {

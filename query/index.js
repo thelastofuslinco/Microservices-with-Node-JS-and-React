@@ -21,11 +21,18 @@ app.post("/events", (req, res) => {
     case "CommentCreated":
       posts[data.postId].comments.push(data);
       break;
+    case "CommentUpdated":
+      const post = posts[data.postId];
+      if (post) {
+        const comment = post.comments.find((c) => c.id === data.id);
+        if (comment) {
+          comment.status = data.status;
+        }
+      }
+      break;
     default:
       break;
   }
-
-  console.log("Posts:", posts);
 
   res.send({ status: "OK" });
 });
