@@ -1,19 +1,17 @@
 const express = require("express");
 const cors = require("cors");
+const axios = require("axios");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+const event_bus_url =
+  process.env.EVENT_BUS_URL || "http://localhost:3003/events";
+
 const posts = {};
 
-app.get("/posts", (req, res) => {
-  res.send(posts);
-});
-
-app.post("/events", (req, res) => {
-  const { type, data } = req.body;
-
+const handleEvent = (type, data) => {
   switch (type) {
     case "PostCreated":
       posts[data.id] = { ...data, comments: [] };
@@ -34,10 +32,28 @@ app.post("/events", (req, res) => {
     default:
       break;
   }
+};
+
+app.get("/posts", (req, res) => {
+  res.send(posts);
+});
+
+app.post("/events", (req, res) => {
+  const { type, data } = req.body;
+
+  handleEvent(type, data);
 
   res.send({ status: "OK" });
 });
 
-app.listen(3002, () => {
+app.listen(3002, async () => {
   console.log("Server is running on port 3002");
+
+  const response = await axios.get(event_bus_url);
+  const events = response.data;
+
+  for (let event of events) {
+    console.log("Processing event:", event.type);
+    handleEvent(event.type, event.data);
+  }
 });

@@ -35,8 +35,19 @@ export function HydrateFallback() {
 }
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const res = await query.get("/posts");
-  return res.data;
+  try {
+    const response = await query.get("/posts");
+    return response.data;
+  } catch (error: Error | any) {
+    const message =
+      error.response?.data?.error ||
+      error.message ||
+      "An unknown error occurred";
+
+    return {
+      error: message,
+    };
+  }
 }
 
 export default function Posts({
