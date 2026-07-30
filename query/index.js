@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 
+const port = process.env.PORT || 3002;
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -46,8 +48,8 @@ app.post("/events", (req, res) => {
   res.send({ status: "OK" });
 });
 
-app.listen(3002, async () => {
-  console.log("Server is running on port 3002");
+app.listen(port, async () => {
+  console.log("Query service is running on port", port);
 
   const response = await axios.get(event_bus_url);
   const events = response.data;

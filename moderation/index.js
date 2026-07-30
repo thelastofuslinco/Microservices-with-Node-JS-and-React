@@ -1,6 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 
+const port = process.env.PORT || 3004;
+
 const app = express();
 app.use(express.json());
 
@@ -33,6 +35,6 @@ app.post("/events", (req, res) => {
   res.status(200).json({ message: "Content is acceptable." });
 });
 
-app.listen(3004, () => {
-  console.log("Moderation service listening on port 3004");
+app.listen(port, () => {
+  console.log("Moderation service is running on port", port);
 });

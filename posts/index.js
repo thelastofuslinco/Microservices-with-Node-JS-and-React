@@ -2,6 +2,10 @@ const express = require("express");
 const crypto = require("crypto");
 const axios = require("axios");
 
+const port = 3000;
+const event_bus_url =
+  process.env.EVENT_BUS_URL || "http://event-bus-clusterip-svc:3003/events";
+
 const app = express();
 app.use(express.json());
 
@@ -26,7 +30,7 @@ app.post("/posts", (req, res) => {
   posts[id] = newPost;
 
   axios
-    .post("http://localhost:3003/events", {
+    .post(event_bus_url, {
       type: "PostCreated",
       data: newPost,
     })
@@ -43,6 +47,7 @@ app.post("/events", (req, res) => {
   res.send({ status: "OK" });
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(port, () => {
+  console.log("Version 0.0.2");
+  console.log(`Posts service is running on port ${port}`);
 });

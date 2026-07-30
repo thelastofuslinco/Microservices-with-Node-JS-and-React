@@ -3,6 +3,8 @@ const crypto = require("crypto");
 const makeCors = require("./lib/cors");
 const axios = require("axios");
 
+const port = process.env.PORT || 3001;
+
 const app = express();
 app.use(express.json());
 app.use(makeCors());
@@ -75,6 +77,6 @@ app.post("/events", (req, res) => {
   res.status(200).json({ message: "Content is acceptable." });
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on port 3001");
+app.listen(port, () => {
+  console.log("Comments service is running on port", port);
 });
