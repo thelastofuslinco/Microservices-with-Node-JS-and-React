@@ -13,31 +13,31 @@ app.use(express.json());
 
 const events = [];
 
-app.get("/events", (req, res) => {
+app.get("/api/events", (req, res) => {
   res.send(events);
 });
 
-app.post("/events", (req, res) => {
+app.post("/api/events", (req, res) => {
   console.log("Received Event:", req.body.type);
   events.push(req.body);
 
   // Send event to posts service
-  axios.post(posts_url + "/events", req.body).catch((err) => {
+  axios.post(posts_url + "/api/events", req.body).catch((err) => {
     console.log("Error sending event to posts service:", err.message);
   });
 
   // Send event to comments service
-  axios.post(comments_url + "/events", req.body).catch((err) => {
+  axios.post(comments_url + "/api/events", req.body).catch((err) => {
     console.log("Error sending event to comments service:", err.message);
   });
 
   // Send event to query service
-  axios.post(query_url + "/events", req.body).catch((err) => {
+  axios.post(query_url + "/api/events", req.body).catch((err) => {
     console.log("Error sending event to query service:", err.message);
   });
 
   // Send event to moderation service
-  axios.post(moderation_url + "/events", req.body).catch((err) => {
+  axios.post(moderation_url + "/api/events", req.body).catch((err) => {
     console.log("Error sending event to moderation service:", err.message);
   });
 

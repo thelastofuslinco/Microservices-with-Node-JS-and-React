@@ -15,7 +15,7 @@ spec:
       containers:
         - name: event-bus
           image: thelastofuslinco/event-bus
-          imagePullPolicy: Always
+          imagePullPolicy: Never
 ---
 apiVersion: v1
 kind: Service

@@ -15,7 +15,7 @@ export async function action({ request }: { request: Request }) {
   }
 
   try {
-    await posts.post("/posts", { title, content });
+    await posts.post("/posts/create", { title, content });
 
     return { title, content };
   } catch (error: Error | any) {
@@ -62,7 +62,7 @@ export default function Posts({
 
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto p-4">
-      <h1>Posts</h1>
+      <h1>Posts oi nnn</h1>
       <PostCreate actionData={actionData} />
       <PostList posts={postsData} />
     </div>

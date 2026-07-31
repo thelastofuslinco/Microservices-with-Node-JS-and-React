@@ -3,7 +3,7 @@ const cors = require("cors");
 const axios = require("axios");
 
 const port = 3002;
-const event_bus_url = "http://event-bus-clusterip-svc:3003/events";
+const event_bus_url = "http://event-bus-clusterip-svc:3003/api/events";
 
 const app = express();
 app.use(express.json());
@@ -34,11 +34,11 @@ const handleEvent = (type, data) => {
   }
 };
 
-app.get("/posts", (req, res) => {
+app.get("/api/posts", (req, res) => {
   res.send(posts);
 });
 
-app.post("/events", (req, res) => {
+app.post("/api/events", (req, res) => {
   const { type, data } = req.body;
 
   handleEvent(type, data);

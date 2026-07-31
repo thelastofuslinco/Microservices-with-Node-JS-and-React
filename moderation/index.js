@@ -2,12 +2,12 @@ const express = require("express");
 const axios = require("axios");
 
 const port = 3004;
-const event_bus_url = "http://event-bus-clusterip-svc:3003/events";
+const event_bus_url = "http://event-bus-clusterip-svc:3003/api/events";
 
 const app = express();
 app.use(express.json());
 
-app.post("/events", (req, res) => {
+app.post("/api/events", (req, res) => {
   const { type, data } = req.body;
 
   switch (type) {

@@ -4,7 +4,7 @@ const makeCors = require("./lib/cors");
 const axios = require("axios");
 
 const port = 3001;
-const event_bus_url = "http://event-bus-clusterip-svc:3003/events";
+const event_bus_url = "http://event-bus-clusterip-svc:3003/api/events";
 
 const app = express();
 app.use(express.json());
@@ -12,13 +12,13 @@ app.use(makeCors());
 
 const posts = {};
 
-app.get("/posts/:postId/comments", (req, res) => {
+app.get("/api/posts/:postId/comments", (req, res) => {
   const { postId } = req.params;
   const postComments = posts[postId] || [];
   res.send(postComments);
 });
 
-app.post("/posts/:postId/comments", (req, res) => {
+app.post("/api/posts/:postId/comments", (req, res) => {
   const { postId } = req.params;
 
   const id = crypto.randomBytes(4).toString("hex");
@@ -40,7 +40,7 @@ app.post("/posts/:postId/comments", (req, res) => {
   res.status(201).send(newComment);
 });
 
-app.post("/events", (req, res) => {
+app.post("/api/events", (req, res) => {
   const { type, data } = req.body;
 
   switch (type) {

@@ -3,7 +3,7 @@ const crypto = require("crypto");
 const axios = require("axios");
 
 const port = 3000;
-const event_bus_url = "http://event-bus-clusterip-svc:3003/events";
+const event_bus_url = "http://event-bus-clusterip-svc:3003/api/events";
 
 const app = express();
 app.use(express.json());
@@ -13,11 +13,11 @@ app.use(makeCors());
 
 const posts = {};
 
-app.get("/posts", (req, res) => {
+app.get("/api/posts", (req, res) => {
   res.send(posts);
 });
 
-app.post("/posts", (req, res) => {
+app.post("/api/posts/create", (req, res) => {
   const id = crypto.randomBytes(4).toString("hex");
   const { title, content } = req.body;
 
@@ -40,7 +40,7 @@ app.post("/posts", (req, res) => {
   res.status(201).send(newPost);
 });
 
-app.post("/events", (req, res) => {
+app.post("/api/events", (req, res) => {
   console.log("Received Event:", req.body.type);
 
   res.send({ status: "OK" });

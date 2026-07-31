@@ -15,7 +15,7 @@ spec:
       containers:
         - name: query
           image: thelastofuslinco/query
-          imagePullPolicy: Always
+          imagePullPolicy: Never
 ---
 apiVersion: v1
 kind: Service

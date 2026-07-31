@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: moderation-depl
+  name: client-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: moderation
+      app: client
   template:
     metadata:
       labels:
-        app: moderation
+        app: client
     spec:
       containers:
-        - name: moderation
-          image: thelastofuslinco/moderation
+        - name: client
+          image: thelastofuslinco/client
           imagePullPolicy: Never
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: moderation-clusterip-svc
+  name: client-clusterip-svc
 spec:
   selector:
-    app: moderation
+    app: client
   ports:
-    - name: moderation
+    - name: client
       protocol: TCP
-      port: 3004
-      targetPort: 3004
+      port: 3000
+      targetPort: 3000

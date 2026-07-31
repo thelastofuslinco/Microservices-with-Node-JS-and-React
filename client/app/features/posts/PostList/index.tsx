@@ -25,7 +25,7 @@ export default function PostList({ posts }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1>Post List</h1>
+      <h1>Post List|||</h1>
       {postsArray?.map((post) => (
         <div className="bg-gray-100 p-4 rounded" key={post.id}>
           <h2 className="text-gray-800 text-lg font-bold">
