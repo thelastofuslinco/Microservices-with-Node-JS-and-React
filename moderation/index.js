@@ -1,7 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 
-const port = process.env.PORT || 3004;
+const port = 3004;
+const event_bus_url = "http://event-bus-clusterip-svc:3003/events";
 
 const app = express();
 app.use(express.json());
@@ -14,7 +15,7 @@ app.post("/events", (req, res) => {
       const status = data.content.includes("orange") ? "rejected" : "approved";
 
       axios
-        .post("http://localhost:3003/events", {
+        .post(event_bus_url, {
           type: "CommentModerated",
           data: {
             id: data.id,

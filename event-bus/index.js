@@ -1,17 +1,15 @@
 const express = require("express");
 const axios = require("axios");
 
+const port = 3003;
+
+const posts_url = "http://posts-clusterip-svc:3000";
+const comments_url = "http://comments-clusterip-svc:3001";
+const query_url = "http://query-clusterip-svc:3002";
+const moderation_url = "http://moderation-clusterip-svc:3004";
+
 const app = express();
 app.use(express.json());
-
-const port = process.env.PORT || 3003;
-
-const posts_url = process.env.POSTS_URL || "http://posts-clusterip-svc:3000";
-const comments_url =
-  process.env.COMMENTS_URL || "http://comments-clusterip-svc:3001";
-const query_url = process.env.QUERY_URL || "http://query-clusterip-svc:3002";
-const moderation_url =
-  process.env.MODERATION_URL || "http://moderation-clusterip-svc:3004";
 
 const events = [];
 
@@ -28,20 +26,20 @@ app.post("/events", (req, res) => {
     console.log("Error sending event to posts service:", err.message);
   });
 
-  // // Send event to comments service
-  // axios.post(comments_url + "/events", req.body).catch((err) => {
-  //   console.log("Error sending event to comments service:", err.message);
-  // });
+  // Send event to comments service
+  axios.post(comments_url + "/events", req.body).catch((err) => {
+    console.log("Error sending event to comments service:", err.message);
+  });
 
-  // // Send event to query service
-  // axios.post(query_url + "/events", req.body).catch((err) => {
-  //   console.log("Error sending event to query service:", err.message);
-  // });
+  // Send event to query service
+  axios.post(query_url + "/events", req.body).catch((err) => {
+    console.log("Error sending event to query service:", err.message);
+  });
 
-  // // Send event to moderation service
-  // axios.post(moderation_url + "/events", req.body).catch((err) => {
-  //   console.log("Error sending event to moderation service:", err.message);
-  // });
+  // Send event to moderation service
+  axios.post(moderation_url + "/events", req.body).catch((err) => {
+    console.log("Error sending event to moderation service:", err.message);
+  });
 
   res.send({ status: "OK" });
 });

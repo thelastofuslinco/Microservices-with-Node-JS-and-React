@@ -3,8 +3,7 @@ const crypto = require("crypto");
 const axios = require("axios");
 
 const port = 3000;
-const event_bus_url =
-  process.env.EVENT_BUS_URL || "http://event-bus-clusterip-svc:3003/events";
+const event_bus_url = "http://event-bus-clusterip-svc:3003/events";
 
 const app = express();
 app.use(express.json());
@@ -48,6 +47,6 @@ app.post("/events", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("Version 0.0.2");
+  console.log("Version 0.0.3");
   console.log(`Posts service is running on port ${port}`);
 });
